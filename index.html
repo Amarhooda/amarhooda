@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amar Hooda - Personal Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Gradient background */
+            background: linear-gradient(to right, #e0f2fe, #e0e7ff); /* Light blue to light purple */
+            color: #374151; /* Dark gray text */
+        }
+        .section {
+            display: none; /* Hide all sections by default */
+        }
+        .section.active {
+            display: block; /* Show active section */
+        }
+        /* Hamburger Menu Icon */
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 20;
+        }
+        .hamburger-icon div {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+        /* Animation for opening/closing */
+        .hamburger-icon.open div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger-icon.open div:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-icon.open div:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile Nav Links */
+        .mobile-nav-links {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #4f46e5;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            padding: 1rem 0;
+            z-index: 15;
+        }
+        .mobile-nav-links.active {
+            display: flex;
+        }
+        .mobile-nav-links button {
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem 0;
+            border-radius: 0;
+            background-color: transparent;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .mobile-nav-links button:hover {
+            background-color: #6366f1;
+        }
+
+        /* Responsive iframe container for YouTube videos */
+        .video-responsive {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+        .video-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Gallery Image Container Styling */
+        .gallery-image-container {
+            width: 100%; /* Ensures it takes full column width */
+            height: 256px; /* Fixed height for all images */
+            overflow: hidden;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-image-container:hover {
+            transform: scale(1.02); /* Slightly enlarge on hover */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+        }
+        .gallery-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image covers the container without distortion */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-blue-600 to-purple-600 p-4 shadow-lg relative">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-white text-3xl font-bold rounded-lg p-2 hover:bg-white hover:text-blue-600 transition duration-300">Amar Hooda</a>
+
+            <!-- Hamburger Menu Icon (visible on small screens) -->
+            <div class="md:hidden hamburger-icon" id="hamburger-icon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+
+            <!-- Desktop Navigation Links (visible on medium and larger screens) -->
+            <div class="hidden md:flex space-x-4">
+                <button class="nav-link bg-white text-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 transition duration-300 shadow-md" data-target="home-section">Home</button>
+                <button class="nav-link bg-white text-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 transition duration-300 shadow-md" data-target="landscapes-section">Landscapes</button>
+                <button class="nav-link bg-white text-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 transition duration-300 shadow-md" data-target="about-section">About</button>
+                <button class="nav-link bg-white text-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 transition duration-300 shadow-md" data-target="products-section">Gears</button>
+                <button class="nav-link bg-white text-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 transition duration-300 shadow-md" data-target="youtube-section">YouTube</button>
+                <button class="nav-link bg-white text-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 transition duration-300 shadow-md" data-target="contact-section">Contact</button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Links (toggled by hamburger) -->
+        <div class="mobile-nav-links" id="mobile-nav-links">
+            <button class="nav-link" data-target="home-section">Home</button>
+            <button class="nav-link" data-target="landscapes-section">Landscapes</button>
+            <button class="nav-link" data-target="about-section">About</button>
+            <button class="nav-link" data-target="products-section">Gears</button>
+            <button class="nav-link" data-target="youtube-section">YouTube</button>
+            <button class="nav-link" data-target="contact-section">Contact</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-6">
+
+        <!-- Home Section -->
+        <section id="home-section" class="section active bg-white p-8 rounded-xl shadow-lg mb-8 text-center">
+            <img src="Photos/IMG_20250703_114556.jpg" alt="Amar Hooda" class="rounded-full w-64 h-64 object-cover mx-auto mb-6 shadow-xl border-4 border-blue-500">
+            <h1 class="text-6xl font-extrabold text-blue-700 mb-4">Hey, it's me AMAR</h1>
+            <p class="text-2xl text-gray-700 font-semibold mb-8">I'm a content creator, videographer, traveler</p>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
+                Welcome to my digital space! Here, I share my passion for visual storytelling, my adventures around the world, and the tools I use to bring my creative visions to life. Explore my work and connect with me!
+            </p>
+            <button class="nav-link bg-blue-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-blue-700 transition duration-300 shadow-lg transform hover:scale-105" data-target="contact-section">
+                Let's Connect!
+            </button>
+        </section>
+
+        <!-- Landscapes Section (now a Gallery) -->
+        <section id="landscapes-section" class="section bg-white p-8 rounded-xl shadow-lg mb-8">
+            <h2 class="text-4xl font-bold text-center text-blue-700 mb-6">Breathtaking Landscapes</h2>
+            <p class="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
+                Explore my collection of stunning landscape photographs, capturing the beauty and grandeur of nature from around the world.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Landscape Image 1 -->
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_114832.jpg" alt="Majestic Mountain View">
+                </div>
+                <!-- Landscape Image 2 -->
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115045.jpg" alt="Serene Coastal Sunset">
+                </div>
+                <!-- Landscape Image 3 -->
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115203.jpg" alt="Enchanting Forest Path">
+                </div>
+                <!-- Landscape Image 4 -->
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115304.jpg" alt="Vast Desert Dunes">
+                </div>
+                <!-- Add more landscape images as needed -->
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115353.jpg" alt="Aurora Borealis Night Sky">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115548.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115657.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115753.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115835.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115853.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115918.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_115934.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120012.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120146.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120216.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120255.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120322.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120332.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120429.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120445.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120729.jpg" alt="Powerful Waterfall">
+                </div>
+                <div class="gallery-image-container">
+                    <img src="Photos/IMG_20250703_120810.jpg" alt="Powerful Waterfall">
+                </div>
+            </div>
+        </section>
+
+        <!-- About Page Section -->
+        <section id="about-section" class="section bg-white p-8 rounded-xl shadow-lg mb-8">
+            <h2 class="text-4xl font-bold text-center text-blue-700 mb-6">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <img src="/Photos/IMG_20250703_114717.jpg" alt="Amar Hooda" class="rounded-full w-48 h-48 object-cover shadow-md">
+                <div class="text-lg text-gray-700">
+                    <p class="mb-4">
+                        Hi there! I'm Amar Hooda, and I'm passionate about capturing life's moments through the lens. My journey into videography and content creation began a year ago when I started documenting my travels and sharing them online.
+                    </p>
+                    <p class="mb-4">
+                        I believe in continuous learning and always strive to improve my skills. Whether it's mastering new camera techniques, editing captivating videos, or exploring new destinations, I pour my heart into every project. My goal is to create meaningful and impactful content that inspires and entertains.
+                    </p>
+                    <p>
+                        Outside of my creative pursuits, I enjoy exploring new cultures, hiking in nature, and spending time with my family. These activities help me stay creative and grounded. I'm always open to new collaborations and exciting opportunities, so feel free to reach out!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gears Page Section (formerly Products) -->
+        <section id="products-section" class="section bg-white p-8 rounded-xl shadow-lg mb-8">
+            <h2 class="text-4xl font-bold text-center text-blue-700 mb-6">My Essential Gears</h2>
+            <p class="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
+                These are the tools that help me capture amazing content. Check them out!
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Gear Card 1: DJI Osmo Pocket 3 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
+                    <img src="Photos/IMG_20250703_120418.jpg" alt="DJI Osmo Pocket 3" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">DJI Osmo Pocket 3</h3>
+                    <p class="text-gray-600 mb-4">Compact and powerful, perfect for cinematic shots on the go.</p>
+                    <a href="https://amzn.to/3Tjj4dN" target="_blank" class="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-lg">Buy Now</a>
+                </div>
+                <!-- Gear Card 2: DJI Air 3S -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
+                    <img src="Photos/images.jpeg" alt="DJI Air 3S" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">DJI Air 3S</h3>
+                    <p class="text-gray-600 mb-4">My go-to drone for stunning aerial videography and photography.</p>
+                    <a href="https://jetayugadgets.com/products/dji-air-3s-fly-more-combo-dji-rc-2" target="_blank" class="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-lg">Buy Now</a>
+                </div>
+                <!-- Gear Card 3: DJI Osmo Action 4 -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
+                    <img src="Photos/download.jpeg" alt="DJI Osmo Action 4" class="rounded-lg mb-4 w-full h-48 object-cover">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">DJI Osmo Action 4</h3>
+                    <p class="text-gray-600 mb-4">Durable and versatile, perfect for capturing all my adventurous moments.</p>
+                    <a href="https://amzn.to/3TjECHh" target="_blank" class="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition duration-300 shadow-lg">Buy Now</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- YouTube Link Page Section -->
+        <section id="youtube-section" class="section bg-white p-8 rounded-xl shadow-lg mb-8">
+            <h2 class="text-4xl font-bold text-center text-blue-700 mb-6">My YouTube Channel</h2>
+            <p class="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
+                Check out my YouTube channel for travel vlogs!
+            </p>
+
+            <!-- Visit Channel Button -->
+            <div class="text-center mb-12">
+                <a href="https://www.youtube.com/@amar_hooda" target="_blank" class="bg-red-600 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-red-700 transition duration-300 shadow-lg">
+                    Visit My Channel
+                </a>
+            </div>
+
+            <!-- Popular Videos Section -->
+            <h3 class="text-3xl font-bold text-center text-blue-600 mb-6">Videos</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Popular Video 1 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/2IgDb9Myz_Y?si=UMpoY29PauudRdIQ" title="Popular Video 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-800 mt-4">Jaisalmer</p>
+                </div>
+                <!-- Popular Video 2 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/aLQSxgRzUyE?si=bCa_KnoF1FgDplfJ" title="Popular Video 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-800 mt-4">Drone Shots McleodGanj</p>
+                </div>
+                <!-- Popular Video 3 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/lChSx0RcAp4?si=K17S6By4Hnp9xfwR" title="Popular Video 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-800 mt-4">Far Away!</p>
+                </div>
+            </div>
+
+            <!-- Series Trailers Section -->
+            <h3 class="text-3xl font-bold text-center text-blue-600 mb-6">Series Trailers</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Series Trailer 1 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/swhSOaK6zQM?si=uaKiZQqzCLRrOouc" title="Series Trailer 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-800 mt-4">The RAJASTHAN Odyssey</p>
+                </div>
+                <!-- Series Trailer 2 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/kOsLbyem3x0?si=kf8tHN56_CFUON-b" title="Series Trailer 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-800 mt-4">Himachal</p>
+                </div>
+                <!-- Series Trailer 3 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/qjY70ggmmxw?si=vEpCmjisR5xwL-bB" title="Series Trailer 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-lg font-semibold text-gray-800 mt-4">Spiti Valley</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact-section" class="section bg-white p-8 rounded-xl shadow-lg mb-8 text-center">
+            <h2 class="text-4xl font-bold text-center text-blue-700 mb-6">Get in Touch!</h2>
+            <p class="text-lg text-gray-700 text-center mb-8 max-w-3xl mx-auto">
+                I'd love to hear from you! Whether it's a collaboration, a project idea, or just to say hello, feel free to reach out through any of the channels below. <br>
+               <b> Email: ahjsecond@gmail.com </b>
+            </p>
+            <div class="flex flex-col items-center space-y-6">
+                <div class="flex space-x-6">
+                    <a href="https://www.youtube.com/@amar_hooda" target="_blank" class="text-red-600 hover:text-red-700 transition duration-300 text-5xl transform hover:scale-110">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://www.instagram.com/amar_hooda.ahj/" target="_blank" class="text-pink-600 hover:text-pink-700 transition duration-300 text-5xl transform hover:scale-110">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://x.com/I_M_AHJ" target="_blank" class="text-blue-400 hover:text-blue-500 transition duration-300 text-5xl transform hover:scale-110">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <!-- Add more social links as needed -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Policy Section -->
+        <section id="privacy-policy-section" class="section bg-white p-8 rounded-xl shadow-lg mb-8">
+            <h2 class="text-4xl font-bold text-center text-blue-700 mb-6">Privacy Policy</h2>
+            <p class="text-lg text-gray-700 text-center max-w-3xl mx-auto">
+                Please don't misuse these images. I've added these to showcase my work and personal moments to you. Your understanding is greatly appreciated.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white p-4 text-center mt-auto shadow-inner">
+        <div class="container mx-auto">
+            <p>&copy; 2025 Amar Hooda. All rights reserved.</p>
+            <div class="flex justify-center mt-4">
+                <button class="text-gray-300 hover:text-white transition duration-300 footer-link" data-target="privacy-policy-section">Privacy Policy</button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const footerLinks = document.querySelectorAll('.footer-link');
+            const sections = document.querySelectorAll('.section');
+            const hamburgerIcon = document.getElementById('hamburger-icon');
+            const mobileNavLinks = document.getElementById('mobile-nav-links');
+
+            // Function to show a specific section
+            const showSection = (targetId) => {
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+                // Close mobile menu after selecting a section
+                if (mobileNavLinks.classList.contains('active')) {
+                    mobileNavLinks.classList.remove('active');
+                    hamburgerIcon.classList.remove('open');
+                }
+            };
+
+            // Event listeners for navigation links (both desktop and mobile)
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.dataset.target;
+                    showSection(targetId);
+                });
+            });
+
+            // Event listeners for footer links
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.dataset.target;
+                    showSection(targetId);
+                });
+            });
+
+            // Hamburger menu toggle
+            hamburgerIcon.addEventListener('click', () => {
+                mobileNavLinks.classList.toggle('active');
+                hamburgerIcon.classList.toggle('open');
+            });
+
+            // Carousel functionality (only for personal photos now)
+            function createCarousel(carouselId) {
+                const carouselContainer = document.getElementById(carouselId);
+                if (!carouselContainer) return;
+
+                const carouselImages = carouselContainer.querySelector('.carousel-images');
+                const images = carouselImages.querySelectorAll('img');
+                const prevButton = carouselContainer.querySelector('.carousel-button.prev');
+                const nextButton = carouselContainer.querySelector('.carousel-button.next');
+
+                let currentIndex = 0;
+
+                const updateCarousel = () => {
+                    if (images.length === 0) return;
+                    const imageWidth = images[0].clientWidth;
+                    carouselImages.style.transform = `translateX(-${currentIndex * imageWidth}px)`;
+                };
+
+                prevButton.addEventListener('click', () => {
+                    currentIndex = (currentIndex === 0) ? images.length - 1 : currentIndex - 1;
+                    updateCarousel();
+                });
+
+                nextButton.addEventListener('click', () => {
+                    currentIndex = (currentIndex === images.length - 1) ? 0 : currentIndex + 1;
+                    updateCarousel();
+                });
+
+                window.addEventListener('resize', updateCarousel);
+                updateCarousel(); // Initial update
+            }
+
+            // Initialize carousels for personal photos only
+            createCarousel('personal-carousel');
+
+            // Show the home section by default on page load
+            showSection('home-section');
+        });
+    </script>
+</body>
+</html>
